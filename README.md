@@ -8,9 +8,9 @@ Copyright © 2019 Adrian Kennard, Andrews & Arnold Ltd, and original authors. Se
 
 ### 2025/04/07 - Luong Huu Phuc ###
 ***Fix bug can not install I2C***
-Change from:
+Change from (**revk** repo):
 ```c
-  if (vl53l0x_i2cFail(v) == 0)
+  if (vl53l0x_i2cFail(v))
     return "I2C fail";
 
   return NULL;
