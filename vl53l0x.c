@@ -323,7 +323,7 @@ performSingleRefCalibration (vl53l0x_t * v, uint8_t vhv_init_byte)
    {
       if (checkTimeoutExpired ())
          return "CAL Timeout";
-   }
+   }     
    vl53l0x_writeReg8Bit (v, SYSTEM_INTERRUPT_CLEAR, 0x01);
    vl53l0x_writeReg8Bit (v, SYSRANGE_START, 0x00);
    return NULL;
@@ -626,8 +626,6 @@ vl53l0x_config (int8_t port, int8_t scl, int8_t sda, int8_t xshut, uint8_t addre
       return NULL;
    if (!GPIO_IS_VALID_OUTPUT_GPIO (scl) || !GPIO_IS_VALID_OUTPUT_GPIO (sda) || (xshut >= 0 && !GPIO_IS_VALID_OUTPUT_GPIO (xshut)))
       return 0;
-   if (i2c_driver_install (port, I2C_MODE_MASTER, 0, 0, 0))
-      return NULL;              // Uh?
    i2c_config_t config = {
       .mode = I2C_MODE_MASTER,
       .sda_io_num = sda,
@@ -636,12 +634,14 @@ vl53l0x_config (int8_t port, int8_t scl, int8_t sda, int8_t xshut, uint8_t addre
       .scl_pullup_en = true,
       .master.clk_speed = 100000,
    };
-   if (i2c_param_config (port, &config))
-   {                            // Config failed
+   if(i2c_param_config (port, &config) != ESP_OK){
       i2c_driver_delete (port);
       return NULL;
    }
-   i2c_set_timeout (port, 80000);       // Clock stretching
+   if (i2c_driver_install (port, I2C_MODE_MASTER, 0, 0, 0) != ESP_OK)
+      return NULL;              // Uh?
+
+   i2c_set_timeout (port, 80000);   // Clock stretching
    i2c_filter_enable (port, 5);
    if (xshut >= 0)
    {
@@ -895,7 +895,7 @@ vl53l0x_init (vl53l0x_t * v)
    vl53l0x_writeReg8Bit (v, SYSTEM_SEQUENCE_CONFIG, 0xE8);
 
    // VL53L0X_PerformRefCalibration() end
-   if (vl53l0x_i2cFail (v))
+   if (vl53l0x_i2cFail(v) == 0)
       return "I2C fail";
 
    return NULL;
