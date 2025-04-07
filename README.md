@@ -5,3 +5,20 @@ VL53L0X library
 - See include file for details of functions
 
 Copyright © 2019 Adrian Kennard, Andrews & Arnold Ltd, and original authors. See LICENCE file for details. GPL 3.0
+
+### 2025/04/07 - Luong Huu Phuc ###
+***Fix bug can not install I2C***
+Change from:
+```c
+  if (vl53l0x_i2cFail(v) == 0)
+    return "I2C fail";
+
+  return NULL;
+```
+to: 
+```c
+  if (vl53l0x_i2cFail(v) == 0)
+    return "I2C fail";
+
+  return NULL;
+```
