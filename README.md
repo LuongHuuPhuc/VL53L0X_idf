@@ -7,7 +7,7 @@ VL53L0X library
 Copyright © 2019 Adrian Kennard, Andrews & Arnold Ltd, and original authors. See LICENCE file for details. GPL 3.0
 
 ### 2025/04/07 - Luong Huu Phuc ###
-***Fix bug can not install I2C***
+***Fix bug can not install I2C*** <br>
 Change from (**revk** repo):
 ```c
   if (vl53l0x_i2cFail (v))
